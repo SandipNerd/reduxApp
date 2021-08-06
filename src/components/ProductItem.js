@@ -6,12 +6,25 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  TouchableNativeFeedback,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const {width, height} = Dimensions.get('window');
+import {addToCart} from '../store/actions/products';
+
+const {width} = Dimensions.get('window');
 
 const ProductItem = props => {
+  const currProductIsAdded = useSelector(state =>
+    state.products.cartProducts.some(prod => prod.id === props.id),
+  );
+
+  const dispatch = useDispatch();
+
+  const addToCartHandler = () => {
+    dispatch(addToCart(props.id));
+  };
+
   return (
     <TouchableOpacity onPress={props.goToDetail}>
       <View style={styles.card}>
@@ -23,11 +36,14 @@ const ProductItem = props => {
           </Text>
           <View style={styles.buy}>
             <Text style={styles.price}>${props.price}</Text>
-            <TouchableNativeFeedback>
-              <View style={styles.addToCart}>
-                <Text style={styles.addToCartText}>Add to cart</Text>
-              </View>
-            </TouchableNativeFeedback>
+            <MaterialIcons
+              name={
+                currProductIsAdded ? 'remove-shopping-cart' : 'shopping-cart'
+              }
+              color="#ff007f"
+              size={25}
+              onPress={addToCartHandler}
+            />
           </View>
         </View>
       </View>
@@ -69,13 +85,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   addToCart: {
-    backgroundColor: '#ff007f',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
   },
   addToCartText: {
-    color: '#fff',
     fontWeight: 'bold',
   },
 });

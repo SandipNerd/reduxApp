@@ -1,15 +1,34 @@
 import React from 'react';
 import {View, Text, StyleSheet, ImageBackground} from 'react-native';
 
+import {useDispatch, useSelector} from 'react-redux';
+
 import Entypo from 'react-native-vector-icons/Entypo';
+import {toggleFavorite} from '../store/actions/products';
 
 const DetailScreen = props => {
-  const {item} = props.route.params;
+  const availableProducts = useSelector(state => state.products.products);
+
+  const {productId} = props.route.params;
+
+  const dispatch = useDispatch();
+
+  const selectedProduct = availableProducts.filter(
+    prod => prod.id === productId,
+  );
+  const currProdIsFav = useSelector(state =>
+    state.products.favoriteProducts.some(prod => prod.id === productId),
+  );
+
+  const toggleFavoriteHandler = () => {
+    dispatch(toggleFavorite(selectedProduct[0].id));
+  };
+
   return (
     <View style={styles.screen}>
       <ImageBackground
         style={styles.image}
-        source={{uri: item.image}}
+        source={{uri: selectedProduct[0].image}}
         resizeMode="cover">
         <View style={styles.imageHeader}>
           <Entypo
@@ -21,16 +40,21 @@ const DetailScreen = props => {
             }}
           />
           <View style={styles.icon}>
-            <Entypo name="heart-outlined" size={30} color="#000" />
+            <Entypo
+              name={currProdIsFav ? 'heart' : 'heart-outlined'}
+              size={30}
+              color="#ff007f"
+              onPress={toggleFavoriteHandler}
+            />
           </View>
         </View>
       </ImageBackground>
       <View style={styles.content}>
         <View style={styles.headerContent}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.price}>${item.price}</Text>
+          <Text style={styles.title}>{selectedProduct[0].title}</Text>
+          <Text style={styles.price}>${selectedProduct[0].price}</Text>
         </View>
-        <Text>{item.description}</Text>
+        <Text>{selectedProduct[0].description}</Text>
       </View>
     </View>
   );
@@ -49,7 +73,7 @@ const styles = StyleSheet.create({
   },
   imageHeader: {
     flexDirection: 'row',
-    paddingTop: 50,
+    paddingTop: 20,
     paddingHorizontal: 20,
     justifyContent: 'space-between',
     alignItems: 'center',

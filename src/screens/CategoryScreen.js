@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import {useSelector} from 'react-redux';
 
-import {CATEGORY} from '../data/dummy-data';
 import CategoryItem from '../components/CategoryItem';
 import CustomHeaderButton from '../components/CustomHeaderButton';
 import NewHeaderButton from '../components/NewHeaderButton';
@@ -10,6 +10,8 @@ import NewHeaderButton from '../components/NewHeaderButton';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 const CategoryScreen = props => {
+  const categories = useSelector(state => state.category.category);
+
   const renderCategories = ({item}) => {
     return (
       <CategoryItem
@@ -32,7 +34,7 @@ const CategoryScreen = props => {
   return (
     <View style={styles.screen}>
       <FlatList
-        data={CATEGORY}
+        data={categories}
         keyExtractor={item => item.id}
         renderItem={renderCategories}
         ItemSeparatorComponent={renderSeparator}

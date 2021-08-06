@@ -1,13 +1,37 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import {useSelector} from 'react-redux';
 
 import CustomHeaderButton from '../components/CustomHeaderButton';
+import ProductItem from '../components/ProductItem';
 
 const CartScreen = props => {
+  const addToCartProducts = useSelector(state => state.products.cartProducts);
+
+  const renderProducts = ({item}) => {
+    return (
+      <ProductItem
+        title={item.title}
+        image={item.image}
+        price={item.price}
+        description={item.description}
+        goToDetail={() => {
+          props.navigation.navigate('detail', {productId: item.id});
+        }}
+      />
+    );
+  };
+
   return (
     <View style={styles.screen}>
-      <Text>You have no products added to your cart</Text>
+      <FlatList
+        data={addToCartProducts}
+        keyExtractor={item => item.id}
+        renderItem={renderProducts}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 };
@@ -33,8 +57,6 @@ export const screenOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
 });

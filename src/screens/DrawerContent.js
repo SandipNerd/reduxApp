@@ -1,31 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableNativeFeedback,
-  Image,
-} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {color} from 'react-native-reanimated';
 
 const DrawerContent = props => {
   const userInfo = useSelector(state => state.users.users);
-
-  //   let curUserInfo = userInfo[0].user;
 
   const signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       props.navigation.navigate('login');
-      // this.setState({user: null}); // Remember to remove the user from your app's state as well
     } catch (error) {
       console.error(error);
     }

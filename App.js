@@ -8,19 +8,25 @@
 
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {StatusBar} from 'react-native';
+import {StatusBar, LogBox} from 'react-native';
 import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 
 import usersReducer from './src/store/reducers/users';
+import categoryReducer from './src/store/reducers/categories';
+import productReducer from './src/store/reducers/products';
 
 import {
   MyDrawer,
   AuthenticateStackNavigator,
 } from './src/navigation/AppNavigator';
 
+LogBox.ignoreAllLogs();
+
 const rootReducer = combineReducers({
   users: usersReducer,
+  category: categoryReducer,
+  products: productReducer,
 });
 
 const store = createStore(rootReducer);

@@ -1,12 +1,16 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
 
-import {PRODUCTS} from '../data/dummy-data';
 import ProductItem from '../components/ProductItem';
 
 const HomeScreen = props => {
   const {catId, title} = props.route.params;
-  const availableProducts = PRODUCTS.filter(item => item.categoryId === catId);
+  const allProducts = useSelector(state => state.products.products);
+
+  const availableProducts = allProducts.filter(
+    prod => prod.categoryId === catId,
+  );
 
   useEffect(() => {
     props.navigation.setParams({title: title});
@@ -15,12 +19,13 @@ const HomeScreen = props => {
   const renderProducts = ({item}) => {
     return (
       <ProductItem
+        id={item.id}
         title={item.title}
         image={item.image}
         price={item.price}
         description={item.description}
         goToDetail={() => {
-          props.navigation.navigate('detail', {item});
+          props.navigation.navigate('detail', {productId: item.id});
         }}
       />
     );
